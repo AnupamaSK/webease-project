@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Select Your Role</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      margin: 50px auto;
+    }
+    .dropdown {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+    .btn {
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .submit-btn {
+      background-color: green;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .reset-btn {
+      background-color: #ff4d4d;
+      color: white;
+    }
+    .btn:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Select Your Role</h3>
+    <select class="dropdown" id="role">
+      <option value="">-- Choose --</option>
+      <option value="writer">Writer</option>
+      <option value="youtuber">YouTuber</option>
+    </select>
+
+    <button class="btn submit-btn" onclick="validateForm()">Submit</button>
+    <button class="btn reset-btn" onclick="resetDropdown()">Reset</button>
+  </div>
+
+  <script>
+    function validateForm() {
+      const selectedRole = document.getElementById('role').value;
+
+      if (selectedRole === "") {
+        alert("Please select a role!");
+        return;
+      }
+
+      if (selectedRole === "youtuber") {
+        alert("YouTuber page is not available yet!");
+        return;
+      }
+
+      // ✅ Store role in sessionStorage
+      sessionStorage.setItem("selectedRole", selectedRole);
+
+      // Move to the introduction page
+      window.location.href = "intro.html";
+    }
+
+    function resetDropdown() {
+      document.getElementById('role').selectedIndex = 0;
+    }
+  </script>
+</body>
+</html>

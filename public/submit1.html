@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Final Submission</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <style>
+    body {
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+    .writer-photo {
+      max-width: 150px;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    .summary-container {
+      max-width: 700px;
+      margin: auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="summary-container text-center">
+    <h2>🌟 Final Submission Summary</h2>
+
+    <h4 class="text-start">👤 Introduction:</h4>
+    <p id="introText" class="text-start">Loading...</p>
+    <img id="writerPhoto" class="writer-photo d-none" />
+
+    <h4 class="text-start mt-4">📚 Books:</h4>
+    <ul id="booksList" class="text-start"><li>Loading...</li></ul>
+
+    <h4 class="text-start mt-4">🏆 Awards:</h4>
+    <ul id="awardsList" class="text-start"><li>Loading...</li></ul>
+  </div>
+
+  <script>
+    // Safely read sessionStorage
+    const writerName = sessionStorage.getItem("writerName") || "Anonymous";
+    const writerIntro = sessionStorage.getItem("writerIntro") || "Not provided";
+    const writerPhoto = sessionStorage.getItem("writerPhoto") || "";
+
+    let booksData = [];
+    try {
+      booksData = JSON.parse(sessionStorage.getItem("books")) || [];
+    } catch (e) {
+      console.error("Invalid books data in sessionStorage");
+    }
+
+    let awardsData = [];
+    try {
+      awardsData = JSON.parse(sessionStorage.getItem("awards")) || [];
+    } catch (e) {
+      console.error("Invalid awards data in sessionStorage");
+    }
+
+    // Show intro
+    document.getElementById("introText").textContent = `${writerName}: ${writerIntro}`;
+
+    // Show photo if present
+    if (writerPhoto) {
+      const img = document.getElementById("writerPhoto");
+      img.src = writerPhoto;
+      img.classList.remove("d-none");
+    }
+
+    // Show books
+    const booksList = document.getElementById("booksList");
+    booksList.innerHTML = "";
+    if (booksData.length > 0) {
+      booksData.forEach(book => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${book.name}</strong><br>
+          ${book.buyLinks.map(link => `<a href="${link}" target="_blank">${link}</a>`).join(" | ")}
+          <br>Sample: ${book.pdf || "Not uploaded"}`;
+        booksList.appendChild(li);
+      });
+    } else {
+      booksList.innerHTML = "<li>No books submitted</li>";
+    }
+
+    // Show awards
+    const awardsList = document.getElementById("awardsList");
+    awardsList.innerHTML = "";
+    if (awardsData.length > 0) {
+      awardsData.forEach(award => {
+        const li = document.createElement("li");
+        li.textContent = award;
+        awardsList.appendChild(li);
+      });
+    } else {
+      awardsList.innerHTML = "<li>No awards submitted</li>";
+    }
+  </script>
+
+  <hr>
+  <div class="text-center mt-5">
+    <a href="generate.html" class="btn btn-primary btn-lg">🌐 Generate My Website</a>
+  </div>
+</body>
+</html>

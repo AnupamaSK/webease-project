@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Generated Website</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <style>
+    body {
+      padding: 2rem;
+      background-color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+    .writer-photo {
+      max-width: 150px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .section {
+      margin-top: 2rem;
+    }
+    #copyAlert {
+      display: none;
+    }
+
+    /* ✨ Fresh button effect */
+    #copyBtn {
+      padding: 0.5rem 1.2rem;
+      border: 2px solid #0d6efd;
+      background-color: white;
+      color: #0d6efd;
+      font-weight: bold;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #copyBtn:hover {
+      background-color: #0d6efd;
+      color: white;
+      box-shadow: 0 0 15px #0d6efd80;
+      transform: scale(1.05);
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+    }
+
+    #copyAlert {
+      font-weight: bold;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container text-center">
+    <h1 id="writerName">Writer Name</h1>
+    <img id="writerPhoto" class="writer-photo d-none" />
+    <p id="writerIntro" class="text-muted"></p>
+
+    <div class="section text-start">
+      <h3>📚 Books</h3>
+      <ul id="bookList"></ul>
+    </div>
+
+    <div class="section text-start">
+      <h3>🏆 Awards</h3>
+      <ul id="awardList"></ul>
+    </div>
+
+    <div class="section text-center mt-5">
+      <h4>🔗 Your Generated Link:</h4>
+      <p id="linkDisplay" class="text-primary fw-bold">Loading...</p>
+      <button id="copyBtn">Copy Link</button>
+      <div id="copyAlert" class="text-success mt-2">✔ Link copied to clipboard!</div>
+    </div>
+  </div>
+
+  <script>
+    // Load writer details
+    document.getElementById("writerName").textContent = sessionStorage.getItem("writerName") || "Anonymous";
+    document.getElementById("writerIntro").textContent = sessionStorage.getItem("writerIntro") || "No introduction provided.";
+
+    const photo = sessionStorage.getItem("writerPhoto");
+    if (photo) {
+      const img = document.getElementById("writerPhoto");
+      img.src = photo;
+      img.classList.remove("d-none");
+    }
+
+    // Load books
+    const bookList = document.getElementById("bookList");
+    const books = JSON.parse(sessionStorage.getItem("books") || "[]");
+    bookList.innerHTML = books.length ? "" : "<li>No books submitted</li>";
+    books.forEach(book => {
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${book.name}</strong><br>${book.buyLinks.map(link => `<a href="${link}" target="_blank">${link}</a>`).join(" | ")}<br>Sample: ${book.pdf || "Not uploaded"}`;
+      bookList.appendChild(li);
+    });
+
+    // Load awards
+    const awardList = document.getElementById("awardList");
+    const awards = JSON.parse(sessionStorage.getItem("awards") || "[]");
+    awardList.innerHTML = awards.length ? "" : "<li>No awards submitted</li>";
+    awards.forEach(award => {
+      const li = document.createElement("li");
+      li.textContent = award;
+      awardList.appendChild(li);
+    });
+
+    // Show generated link
+    const generatedLink = sessionStorage.getItem("generatedLink");
+    const linkDisplay = document.getElementById("linkDisplay");
+    const copyBtn = document.getElementById("copyBtn");
+    const copyAlert = document.getElementById("copyAlert");
+
+    linkDisplay.textContent = generatedLink || "Link not generated.";
+
+    // Copy link button
+    copyBtn.addEventListener("click", function () {
+      if (generatedLink) {
+        navigator.clipboard.writeText(generatedLink)
+          .then(() => {
+            copyAlert.style.display = "block";
+            setTimeout(() => {
+              copyAlert.style.display = "none";
+            }, 2000);
+          })
+          .catch(() => {
+            alert("Failed to copy the link.");
+          });
+      } else {
+        alert("Link not available to copy.");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WebEase Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1A1A2E, #0F0F1C);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 950px;
+      display: flex;
+      background: #111827;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .left-panel {
+      flex: 1;
+      background: linear-gradient(135deg, #1A1A2E, #111827);
+      color: white;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .left-panel img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+
+    .left-panel h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, #00CFFF, #FF007A);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .left-panel p {
+      font-size: 1rem;
+      color: #cbd5e1;
+    }
+
+    .right-panel {
+      flex: 1;
+      padding: 2rem;
+      background: #1E293B;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 0.6rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      text-align: center;
+      font-weight: 600;
+      color: #94a3b8;
+      transition: 0.3s ease;
+    }
+
+    .tab.active {
+      border-color: #00CFFF;
+      color: #00CFFF;
+    }
+
+    .form-section {
+      display: none;
+      animation: slideIn 0.4s ease;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #00CFFF;
+      outline: none;
+      box-shadow: 0 0 6px #00CFFF55;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #00CFFF, #FF007A);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00CFFF55;
+    }
+
+    button:hover {
+      box-shadow: 0 0 20px #FF007A, 0 0 30px #00CFFF;
+      transform: scale(1.02);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left-panel, .right-panel {
+        width: 100%;
+        text-align: center;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+ 
+</head>
+<body>
+
+  <div class="container">
+    <div class="left-panel">
+      <img src="logo1.jpeg" alt="WebEase Logo" />
+      <h1>Welcome to WebEase</h1>
+      <p>No-Code Website Builder. Let’s get started — login or register now!</p>
+    </div>
+
+    <div class="right-panel">
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('login', this)">Login</div>
+        <div class="tab" onclick="showTab('register', this)">Register</div>
+        <div class="tab" onclick="showTab('forgot', this)">Forgot</div>
+      </div>
+
+      <div id="login" class="form-section active">
+        <input type="email" id="login-email" placeholder="Email" />
+        <input type="password" id="login-password" placeholder="Password" />
+        <button onclick="login()">Login</button>
+      </div>
+
+      <div id="register" class="form-section">
+        <input type="email" id="register-email" placeholder="Email" />
+        <input type="password" id="register-password" placeholder="Password" />
+        <button onclick="register()">Register</button>
+      </div>
+
+      <div id="forgot" class="form-section">
+        <input type="email" id="forgot-email" placeholder="Enter your email" />
+        <button onclick="resetPassword()">Send Reset Link</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="firebase-config.js" defer></script>
+  <script src="script.js" defer></script>
+
+  <script>
+    function showTab(tabId, el) {
+      document.querySelectorAll('.form-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(tabId).classList.add('active');
+      el.classList.add('active');
+    }
+  </script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>

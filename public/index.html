@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebEase - No-Code Website Builder</title>
+    <style>
+        body {
+                 background-color: white;
+             }
+
+         .image-container {
+            position: relative;
+            width: 600px;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+        }
+        .text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 20px;
+            font-size: 20px;
+            border-radius: 5px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .big-button {
+            font-size: 20px;
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .big-button:hover {
+            background-color: #0056b3;
+        }
+        .menu-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .menu {
+            width: 35px;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .bar {
+            width: 100%;
+            height: 5px;
+            background-color: black;
+            margin: 6px 0;
+            border-radius: 5px;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+           left: 0;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            min-width: 150px;
+            z-index: 1;
+        }
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+        .dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        .container img {
+            width: 150px;
+            margin-right: 20px;
+        }
+        .text {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .text h2 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .features {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .features li {
+            margin-bottom: 5px;
+        }
+   
+
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <div class="menu" onclick="toggleMenu()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <div class="dropdown" id="dropdownMenu">
+            
+            <a href="help.html">Need Help!</a>
+            <a href="feature.html">Features</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdownMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener("click", function(event) {
+            var menuContainer = document.querySelector(".menu-container");
+            if (!menuContainer.contains(event.target)) {
+                document.getElementById("dropdownMenu").style.display = "none";
+            }
+        });
+    </script>
+<br>
+<img src="logo2.jpeg" alt="WebEase Logo">
+
+<br>
+ <div class="container">
+     <div class="text">
+            <h2>WebEase - No-Code Website Builder</h2>
+<br>
+            <p>WebEase is an easy-to-use platform that allows anyone to build professional websites without coding.  
+               Whether you're a beginner or a business owner, WebEase simplifies web development with drag-and-drop tools.</p>
+
+            <h3>Features:</h3>
+            <ul class="features">
+                   <li> 🔹  <strong>Customizable Templates</strong> – Pre-built templates for different industries, ensuring a professional look.</li>
+                   <li> 🔹  <strong>Responsive Design </strong>Responsive Design – Websites automatically adjust to different screen sizes (mobile, tablet, desktop). </li>
+                    <li>🔹  <strong>SEO Optimization</strong>SEO Optimization – Built-in tools to enhance website visibility on search engines.</li>
+                    <li>🔹  <strong>Hosting & Deployment</strong>Hosting & Deployment – One-click publishing with custom domains and cloud hosting support. </li>
+                    <li>🔹<strong>User Authentication</strong>  User Authentication – Secure login and account management features. </li>
+                    
+                    
+            </ul>
+        </div>
+    </div>
+
+    <h2>Need to create Websites?!</h2>
+
+    <button class="big-button" onclick="goToRoleSelection()">Click Me</button>
+
+    <script>Q11
+        function goToRoleSelection() {
+            window.location.href = "clickhears.html"; // Modified path only
+        }
+    </script>
+
+</body>
+</html>

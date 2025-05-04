@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Awards Input Form</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <style>
+    body {
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(80, 218, 98, 0.1);
+      margin-top: 30px;
+    }
+    .remove-btn {
+      cursor: pointer;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h3 class="text-center">List Your Awards</h3>
+  <form id="awardsForm">
+    <div id="awardsContainer">
+      <div class="input-group mb-2">
+        <input type="text" class="form-control award-input" placeholder="Enter award name" required>
+        <button type="button" class="btn btn-danger remove-btn" onclick="removeAward(this)">X</button>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-secondary w-100" onclick="addAward()">+ Add Another Award</button><br>
+    <button type="button" class="btn btn-warning w-100 mt-2" id="viewOnceBtn">← View Once</button>
+    <button type="submit" class="btn btn-primary w-100 mt-2">Submit</button>
+  </form>
+
+  <div class="mt-4" id="output"></div>
+</div>
+
+<script>
+  function addAward() {
+    let container = document.getElementById("awardsContainer");
+    let inputGroup = document.createElement("div");
+    inputGroup.classList.add("input-group", "mb-2");
+    inputGroup.innerHTML = `
+      <input type="text" class="form-control award-input" placeholder="Enter award name" required>
+      <button type="button" class="btn btn-danger remove-btn" onclick="removeAward(this)">X</button>
+    `;
+    container.appendChild(inputGroup);
+  }
+
+  function removeAward(button) {
+    button.parentElement.remove();
+  }
+
+  function collectAwardsData() {
+    let awards = document.querySelectorAll(".award-input");
+    let awardsArray = [];
+
+    awards.forEach(input => {
+      if (input.value.trim() !== "") {
+        awardsArray.push(input.value.trim());
+      }
+    });
+
+    return awardsArray;
+  }
+
+  function showAwardsPreview(data, isPreview = true) {
+    let output = `<h4>${isPreview ? "Preview" : "Awards Submitted"}:</h4><ul class="list-group">`;
+    data.forEach(award => {
+      output += `<li class="list-group-item">${award}</li>`;
+    });
+    output += `</ul>`;
+    document.getElementById("output").innerHTML = output;
+  }
+
+  document.getElementById("viewOnceBtn").addEventListener("click", function () {
+    const awardsData = collectAwardsData();
+    if (awardsData.length > 0) {
+      sessionStorage.setItem("awards", JSON.stringify(awardsData));
+      showAwardsPreview(awardsData, true);
+    } else {
+      alert("Please enter at least one award to preview.");
+    }
+  });
+
+  document.getElementById("awardsForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    const awardsData = collectAwardsData();
+
+    if (awardsData.length > 0) {
+      sessionStorage.setItem("awards", JSON.stringify(awardsData));
+      showAwardsPreview(awardsData, false);
+
+      const writerName = sessionStorage.getItem("writerName") || "";
+      if (!writerName) {
+        alert("Writer name is missing. Please go back and enter your introduction.");
+        return;
+      }
+
+      // ✅ Corrected console.log with correct variable
+      console.log("Sending:", {
+        name: writerName,
+        awards: awardsData
+      });
+
+      fetch("http://localhost:5000/api/saveAwards", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: writerName, awards: awardsData })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Failed to save awards");
+        return response.json();
+      })
+      .then(data => {
+        console.log(data.message);
+        window.location.href = 'submit1.html';
+      })
+      .catch(error => {
+        alert("Something went wrong while saving your awards.");
+        console.error(error);
+      });
+    } else {
+      alert("Please enter at least one award before submitting.");
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Your Photo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        #preview {
+            margin-top: 10px;
+            max-width: 100%;
+            display: none;
+            border-radius: 5px;
+        }
+
+        #nextBtn {
+            display: none;
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h3>Upload Your Photo</h3>
+        <input type="file" id="photoInput" accept="image/*" class="input-box" onchange="previewPhoto()">
+        <img id="preview" alt="Photo Preview">
+        <button class="btn" onclick="submitPhoto()">Submit</button>
+        <button class="btn" id="nextBtn" onclick="goToNextPage()">Next</button>
+    </div>
+
+    <script>
+        function previewPhoto() {
+            let input = document.getElementById('photoInput');
+            let preview = document.getElementById('preview');
+
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function submitPhoto() {
+            let input = document.getElementById('photoInput').value;
+            if (input === '') {
+                alert("Please upload a photo!");
+            } else {
+                alert("Photo submitted successfully!");
+                document.getElementById("nextBtn").style.display = "block"; // Show Next button
+            }
+        }
+
+        function goToNextPage() {
+            window.location.href = "books.html"; // ONLY CHANGE: Replaced localhost with relative path
+        }
+    </script>
+
+</body>
+</html>

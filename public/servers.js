@@ -1,0 +1,2 @@
+const getConnection = require('./db');
+

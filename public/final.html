@@ -1,0 +1,183 @@
+<!-- Save as generate.html or similar -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebEase Generator</title>
+    <style>
+        /* Same styling as before */
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            color: #333;
+            margin-top: 50px;
+        }
+        .container {
+            padding: 25px;
+            background: white;
+            border-radius: 8px;
+            width: 350px;
+            margin: auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 14px;
+        }
+        #loading, #website-section, #link-section {
+            display: none;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <div class="container" id="welcome-section">
+        <h1>WebEase</h1>
+        <p>Effortlessly generate your professional website.</p>
+        <button onclick="startGenerating()">Create Website</button>
+    </div>
+
+    <div class="container" id="loading">
+        <h2>Please Wait...</h2>
+        <p>Your website is being generated. This may take a few moments.</p>
+    </div>
+
+    <div class="container" id="website-section">
+        <h2>Website Ready!</h2>
+        <button onclick="generateLink()">Generate Link</button>
+        <button onclick="goBack()">Back</button>
+    </div>
+
+    <div class="container" id="link-section">
+        <h2>Your Website Link</h2>
+        <input type="text" id="website-link" readonly>
+        <button onclick="copyLink()">Copy Link</button>
+        <button onclick="visitLink()">Visit Website</button>
+        <button onclick="goBack()">Back</button>
+    </div>
+
+    <script>
+        let fullPageContent = '';
+
+        function startGenerating() {
+            document.getElementById('welcome-section').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            setTimeout(() => {
+                generateDocument(); // Generate the HTML page content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('website-section').style.display = 'block';
+            }, 2000);
+        }
+
+        function generateDocument() {
+            const intro = sessionStorage.getItem('intro') || '';
+            const books = JSON.parse(sessionStorage.getItem('booksData') || '[]');
+            const awards = JSON.parse(sessionStorage.getItem('awardsData') || '[]');
+
+            let bookHTML = books.map((b, i) => `
+                <h4>Book ${i + 1}: ${b.name}</h4>
+                <ul>${b.links.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('')}</ul>
+                <p>PDF: ${b.pdfName}</p>
+            `).join('<hr>');
+
+            let awardHTML = awards.map((a, i) => `<li>${a.name}</li>`).join('');
+
+            fullPageContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Portfolio</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1, h2, h3 { color: #333; }
+        a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>User Portfolio</h1>
+    <h2>Introduction</h2>
+    <p>${intro}</p>
+    <h2>Books</h2>
+    ${bookHTML}
+    <h2>Awards</h2>
+    <ul>${awardHTML}</ul>
+</body>
+</html>
+            `;
+        }
+
+        function generateLink() {
+            const blob = new Blob([fullPageContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+
+            document.getElementById('website-section').style.display = 'none';
+            document.getElementById('link-section').style.display = 'block';
+            document.getElementById('website-link').value = url;
+        }
+
+        function copyLink() {
+            const input = document.getElementById('website-link');
+            input.select();
+            document.execCommand('copy');
+            alert("Link copied!");
+        }
+
+        function visitLink() {
+            const link = document.getElementById('website-link').value;
+            if (link) {
+                window.open(link, '_blank');
+            }
+        }
+
+        function goBack() {
+            document.getElementById('website-section').style.display = 'none';
+            document.getElementById('link-section').style.display = 'none';
+            document.getElementById('welcome-section').style.display = 'block';
+        }
+
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                sessionStorage.clear();
+                window.location.href = "index.html";
+            }
+        }
+    </script>
+</body>
+</html>
